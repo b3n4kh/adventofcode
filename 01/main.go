@@ -29,7 +29,7 @@ func find2020(data []int) {
 
 func main() {
 
-	dat, err := ioutil.ReadFile("01.txt")
+	dat, err := ioutil.ReadFile("input.txt")
 	check(err)
 	var result []int
 	scanner := bufio.NewScanner(bytes.NewReader(dat))
