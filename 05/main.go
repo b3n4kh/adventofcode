@@ -14,12 +14,6 @@ type Seat struct {
 	col byte
 }
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func bitStringToBytes(s string) byte {
 	var b byte
 	for i := 0; i < len(s); i++ {
@@ -56,7 +50,9 @@ func getEmptySeat(seatIDs []int) (emptySeat int) {
 
 func main() {
 	dat, err := os.Open("input.txt")
-	check(err)
+	if err != nil {
+		panic(err)
+	}
 	defer dat.Close()
 	scanner := bufio.NewScanner(dat)
 	var line string

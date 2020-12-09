@@ -8,7 +8,9 @@ import (
 
 func main() {
 	dat, err := os.Open("input.txt")
-	check(err)
+	if err != nil {
+		panic(err)
+	}
 	defer dat.Close()
 	scanner := bufio.NewScanner(dat)
 	var line string
