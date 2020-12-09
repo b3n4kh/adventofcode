@@ -1,4 +1,4 @@
---- Day 6: Custom Customs ---
+# --- Day 6: Custom Customs ---
 As your flight approaches the regional airport where you'll switch to a much larger plane, customs declaration forms are distributed to the passengers.
 
 The form asks a series of 26 yes-or-no questions marked a through z. All you need to do is identify the questions for which anyone in your group answers "yes". Since your group is just you, this doesn't take very long.
@@ -43,7 +43,7 @@ In this example, the sum of these counts is 3 + 3 + 3 + 1 + 1 = 11.
 
 For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
 
---- Part Two ---
+## --- Part Two ---
 As you finish the last group's customs declaration, you notice that you misread one word in the instructions:
 
 You don't need to identify the questions to which anyone answered "yes"; you need to identify the questions to which everyone answered "yes"!

@@ -1,4 +1,5 @@
---- Day 8: Handheld Halting ---
+# --- Day 8: Handheld Halting ---
+
 Your flight to the major airline hub reaches cruising altitude without incident. While you consider checking the in-flight menu for one of those drinks that come with a little umbrella, you are interrupted by the kid sitting next to you.
 
 Their handheld game console won't turn on! They ask if you can take a look.
@@ -40,11 +41,11 @@ First, the nop +0 does nothing. Then, the accumulator is increased from 0 to 1 (
 
 This is an infinite loop: with this sequence of jumps, the program will run forever. The moment the program tries to run any instruction a second time, you know it will never terminate.
 
-Immediately before the program would run an instruction a second time, the value in the accumulator is 5.
+Immediately before the program would run an instruction a second time, the value in the accumulator is `5`.
 
 Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
 
---- Part Two ---
+## --- Part Two ---
 After some careful analysis, you believe that exactly one instruction is corrupted.
 
 Somewhere in the program, either a jmp is supposed to be a nop, or a nop is supposed to be a jmp. (No acc instructions were harmed in the corruption of this boot code.)
