@@ -75,25 +75,21 @@ func isPassValid(pass Passport) bool {
 		pass.Cid = "1337"
 	}
 	if !hasNoEmptyField(&pass) {
-		fmt.Println("Has EMPTY Field:")
 		return false
 	}
 
 	byr, err := strconv.Atoi(pass.Byr)
 	if (byr < 1920) || (byr > 2002) || err != nil {
-		fmt.Println("Wrong Byr:")
 		return false
 	}
 
 	iyr, err := strconv.Atoi(pass.Iyr)
 	if (iyr < 2010) || (iyr > 2020) || err != nil {
-		fmt.Println("Wrong Iyr:")
 		return false
 	}
 
 	eyr, err := strconv.Atoi(pass.Eyr)
 	if (eyr < 2020) || (eyr > 2030) || err != nil {
-		fmt.Println("Wrong Eyr:")
 		return false
 	}
 
@@ -101,31 +97,26 @@ func isPassValid(pass Passport) bool {
 	hgtUnit := pass.Hgt[len(pass.Hgt)-2:]
 	if hgtUnit == "cm" {
 		if (hgt < 150) || (hgt > 193) || err != nil {
-			fmt.Println("Wrong Hgt:")
 			return false
 		}
 	}
 
 	if hgtUnit == "in" {
 		if (hgt < 59) || (hgt > 76) || err != nil {
-			fmt.Println("Wrong Hgt:")
 			return false
 		}
 	}
 	_, err = strconv.ParseUint(pass.Hcl[1:], 16, 64)
 	if (pass.Hcl[0] != '#') || (len(pass.Hcl) != 7) || err != nil {
-		fmt.Println("Wrong Hcl:")
 		return false
 	}
 
 	if !validEyeColor(pass.Ecl) {
-		fmt.Println("Wrong Ecl:")
 		return false
 	}
 
 	_, err = strconv.Atoi(pass.Pid)
 	if err != nil || (len(pass.Pid) != 9) {
-		fmt.Println("Wrong Pid:")
 		return false
 	}
 	return true

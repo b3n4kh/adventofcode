@@ -14,17 +14,22 @@ func check(e error) {
 	}
 }
 
-func find2020(data []int) {
+func find2020(data []int) (two int, three int) {
 	for first, firstNum := range data {
 		for second, secondNum := range data[first:] {
+			if (firstNum + secondNum) == 2020 {
+				two = firstNum * secondNum
+			}
 			for _, thirdNum := range data[first+second:] {
 				if (firstNum + secondNum + thirdNum) == 2020 {
-					result := firstNum * secondNum * thirdNum
-					fmt.Printf("%v * %v * %v = %v\n", firstNum, secondNum, thirdNum, result)
+					three = firstNum * secondNum * thirdNum
+					// fmt.Printf("%v * %v * %v = %v\n", firstNum, secondNum, thirdNum, result)
+					return two, three
 				}
 			}
 		}
 	}
+	return two, three
 }
 
 func main() {
@@ -38,5 +43,9 @@ func main() {
 		check(err)
 		result = append(result, x)
 	}
-	find2020(result)
+	two, three := find2020(result)
+
+	fmt.Printf("Part One: %v\n", two)
+	fmt.Printf("Part Two: %v\n", three)
+
 }

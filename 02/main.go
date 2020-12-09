@@ -62,6 +62,7 @@ func main() {
 		result1 = result1 + checkPassword(password)
 		result2 = result2 + checkPassword2(password)
 	}
+
 	fmt.Printf("Number of Matches for 1: %d\n", result1)
 	fmt.Printf("Number of Matches for 2: %d", result2)
 }

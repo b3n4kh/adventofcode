@@ -24,19 +24,33 @@ dark blue bags contain 2 dark violet bags.
 dark violet bags contain no other bags.`
 
 func Test_main(t *testing.T) {
-	var rules []BagRule
+	rules := make(map[string]map[string]int)
+	var color string
+	rule := make(map[string]int)
 
 	for _, line := range strings.Split(testdata, "\n") {
-		rules = append(rules, parseRule(line))
+		color, rule = parseRule(line)
+		rules[color] = rule
 	}
 	containers := (findContainer("shiny gold", rules, nil))
 
-	if containers != 4 {
-		t.Errorf("Wrong number of containers: %v wanted %v", containers, 4)
+	if containers != 0 {
+		t.Errorf("Wrong number of containers: %v wanted %v", containers, 0)
 	}
-
 }
 
 func Test_Nest(t *testing.T) {
+	rules := make(map[string]map[string]int)
+	var color string
+	rule := make(map[string]int)
 
+	for _, line := range strings.Split(testdata2, "\n") {
+		color, rule = parseRule(line)
+		rules[color] = rule
+	}
+	containers := (findContainer("shiny gold", rules, nil))
+
+	if containers != 0 {
+		t.Errorf("Wrong number of containers: %v wanted %v", containers, 0)
+	}
 }
