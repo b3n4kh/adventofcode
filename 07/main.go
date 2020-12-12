@@ -8,28 +8,6 @@ import (
 	"strings"
 )
 
-// BagRule containment
-type BagRule struct {
-	color    string
-	contains map[string]int
-}
-
-func findContainerLegacy(color string, rules []BagRule, containers map[string]int) int {
-	if containers == nil {
-		containers = make(map[string]int, len(rules))
-	}
-	for _, rule := range rules {
-		for containedColor := range rule.contains {
-			if containedColor == color {
-				// fmt.Printf("Color: %v found in: %+v\n", color, rule)
-				containers[rule.color] = 1
-				findContainerLegacy(rule.color, rules, containers)
-			}
-		}
-	}
-	return len(containers)
-}
-
 func parseRule(line string) (color string, rule map[string]int) {
 	lineSlice := strings.Split(line[:len(line)-1], " bags contain ")
 	containRules := strings.Split(lineSlice[1], ", ")
@@ -62,21 +40,44 @@ func findContainer(color string, rules map[string]map[string]int, containers map
 	return len(containers)
 }
 
-func findContent(color string, rules map[string]map[string]int, containers int) int {
-	var contains int
-	for containerColor := range rules[color] {
-		contains = findContent(containerColor, rules, containers)
-		//fmt.Printf("%v => %v =>  Add %v + %v\n", color, containedColor, containedItems, contains)
-		//newContainers := containedItems + contains
-		//fmt.Printf("%v => %v =>  Add %v + %v = %v\n", color, containedColor, containedItems, contains, newContainers)
+// vibrant plum    = 2x 11 =>  5 faded blue + 6 dotted black
+// dark olive bags =    7  =>  3 faded blue + 4 dotted black
+// shiny gold      =    3  =>  1 dark olive + 2 vibrant plum
 
-		containers += contains
+// dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+
+//darkolive     darkolive.contains    vibrantplum    vibrantplum.contains          result
+// `   1 +             1*7       +      2      +          2*11                     = 32`
+
+func findContent(color string, rules map[string]map[string]int) int {
+	var newContainers, nestedContainers, sumContainers int
+	for containerColor := range rules[color] {
+
+		nestedContainers = findContent(containerColor, rules)
+		newContainers += rules[color][containerColor]
+
+		if nestedContainers != 0 && newContainers != 0 {
+			sumContainers += rules[color][containerColor]*nestedContainers + rules[color][containerColor]
+		}
+		if nestedContainers == 0 && newContainers != 0 {
+			sumContainers += rules[color][containerColor]
+		}
+
+		// fmt.Printf("%v => %v =>  Add %v + %v = %v\n", color, containedColor, containedItems, contains, newContainers)
+		// result += rules[color][containerColor]
+		// fmt.Printf("%v => %v => Contains: %+v\n", color, containerColor, anzahlAnContainern)
 	}
-	return containers
+	if sumContainers == 0 {
+		sumContainers = sumContainers + newContainers
+	} else {
+		fmt.Printf("Color: %+v => sumContainers %+v\n\n", color, sumContainers)
+	}
+
+	return sumContainers
 }
 
 func main() {
-	dat, err := os.Open("test.txt")
+	dat, err := os.Open("input.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -93,5 +94,8 @@ func main() {
 	}
 
 	fmt.Printf("Part One: %v\n", findContainer("shiny gold", rules, nil))
-	// fmt.Printf("Part Two: %v\n", findContent("shiny gold", rules, 1))
+	containerblubb := findContent("shiny gold", rules)
+	fmt.Printf("Part Two: %+v\n", containerblubb)
+
+	//	fmt.Printf("Part Two: %+v\n", sumContent(containerblubb))
 }
