@@ -40,7 +40,7 @@ func getArrangements(numbers []int) (arrangements int) {
 	arrangedNumbers := make([][]int, len(numbers)-1)
 	for i := 0; i < len(numbers)-1; i++ {
 		arrangedNumbers[i] = make([]int, len(numbers)-1)
-		for diff := 1; diff <= 5; diff++ {
+		for diff := 1; diff <= len(numbers)-1; diff++ {
 			if len(numbers) > i+diff {
 				if i > 0 {
 					lastMax = arrangedNumbers[i-1][2] + 3
@@ -59,7 +59,7 @@ func getArrangements(numbers []int) (arrangements int) {
 		}
 	}
 	fmt.Printf("%+v \n", arrangedNumbers)
-	for diff := 0; diff < 3; diff++ {
+	for diff := 0; diff < (len(numbers) - 1); diff++ {
 		for i := range arrangedNumbers {
 			element := arrangedNumbers[i][diff]
 			if element != 0 {
