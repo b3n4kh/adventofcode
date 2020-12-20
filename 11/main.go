@@ -6,157 +6,117 @@ import (
 	"os"
 )
 
-type Seat struct {
-	row        int
-	col        int
-	empty      bool
-	neighboars []int
+// Coord Row and Col of Seat
+type Coord struct {
+	Row, Col int
 }
 
-type seats map[int]Seat
+var partB = false
+var neighbors = make(map[Coord][]Coord)
 
-func isEmpty(char rune) bool {
-	if char == 'L' {
-		return true
+func (c Coord) adjacent(occupied map[Coord]bool) []Coord {
+	if neighbors[c] != nil {
+		return neighbors[c]
 	}
-	return false
-}
-
-func (allSeats *seats) getSeats(line string, row int) {
-	for col, char := range line {
-		if string(char) == "." {
-			continue
-		}
-		(*allSeats)[row+1*col+1] = Seat{row, col, isEmpty(char), []int{}}
-	}
-}
-
-/* func (allSeats *seats) getNeighbors() {
-	for index, seat := range allSeats {
-		if ((seat.row) == (row-1) && seat.col == col) || ((seat.row) == (row+1) && seat.col == col) {
-			neigbors = append(neigbors, seat)
-		}
-		if ((seat.col) == (col-1) && seat.row == row) || ((seat.col) == (col+1) && seat.row == row) {
-			neigbors = append(neigbors, seat)
-		}
-		if ((seat.row) == (row-1) && (seat.col) == (col-1)) || ((seat.row) == (row+1) && (seat.col) == (col+1)) {
-			neigbors = append(neigbors, seat)
-		}
-		if ((seat.col) == (col-1) && (seat.row) == (row+1)) || ((seat.col) == (col+1) && (seat.row) == (row-1)) {
-			neigbors = append(neigbors, seat)
-		}
-	}
-}
-*/
-
-func (allSeats seats) printSeats(row int, col int) {
-	for i := 1; i < col; i++ {
-		for y := 1; y < row; y++ {
-			if _, ok := allSeats[i*y]; ok {
-				if allSeats[i*y].empty {
-					fmt.Printf("L")
-				} else {
-					fmt.Printf("#")
-				}
+	var ret []Coord
+	for rOffset := -1; rOffset <= 1; rOffset++ {
+		for cOffset := -1; cOffset <= 1; cOffset++ {
+			if cOffset == 0 && rOffset == 0 {
+				continue
+			}
+			if !partB {
+				ret = append(ret, Coord{c.Row + rOffset, c.Col + cOffset})
 			} else {
-				fmt.Printf(".")
-			}
-		}
-		fmt.Printf("\n")
-	}
-}
-
-func (allSeats seats) getNeighbors(row int, col int) seats {
-	size := row * col
-	var neighborSeats seats
-	neighborSeats = make(seats)
-	for i, seat := range allSeats {
-		neighborSeats[i] = seat
-		currentSeat := neighborSeats[i]
-
-		if i-col >= 0 {
-			currentSeat.neighboars = append(currentSeat.neighboars, i-col)
-		}
-		if i%col != 0 {
-			currentSeat.neighboars = append(currentSeat.neighboars, i-1)
-		}
-		if (i+1)%col != 0 {
-			currentSeat.neighboars = append(currentSeat.neighboars, i+1)
-		}
-		if i+col < size {
-			currentSeat.neighboars = append(currentSeat.neighboars, i+col)
-		}
-		if ((i - col - 1) >= 0) && (i%col != 0) {
-			currentSeat.neighboars = append(currentSeat.neighboars, i-row-1)
-		}
-		if ((i - col + 1) >= 0) && ((i+1)%col != 0) {
-			currentSeat.neighboars = append(currentSeat.neighboars, i-col+1)
-		}
-		if ((i + col - 1) < size) && (i%col != 0) {
-			currentSeat.neighboars = append(currentSeat.neighboars, i+col-1)
-		}
-		if ((i + col + 1) < size) && ((i+1)%col != 0) {
-			currentSeat.neighboars = append(currentSeat.neighboars, i+col+1)
-		}
-		neighborSeats[i] = currentSeat
-
-	}
-	//fmt.Printf("%+v\n", neighborSeats)
-
-	return neighborSeats
-}
-
-func changeSeats(allSeats seats) (newSeats seats) {
-	newSeats = make(seats)
-	var changeState int
-	for i, seat := range allSeats {
-		newSeats[i] = seat
-		s := newSeats[i]
-
-		if seat.empty {
-			for _, neighboar := range seat.neighboars {
-				if allSeats[neighboar].empty {
-					s.empty = false
+				for i := 1; ; i++ {
+					pos := Coord{c.Row + rOffset*i, c.Col + cOffset*i}
+					if pos.Col < 0 || pos.Row < 0 || pos.Col > 100 || pos.Row > 100 {
+						break
+					}
+					if _, seat := occupied[pos]; seat {
+						ret = append(ret, pos)
+						break
+					}
 				}
 			}
-		} else {
-			changeState = 0
-			for _, neighboar := range seat.neighboars {
-				if !allSeats[neighboar].empty {
-					changeState++
-				}
-			}
-			if changeState > 3 {
-				s.empty = true
-			}
 		}
-
-		newSeats[i] = s
 	}
-	return newSeats
+	neighbors[c] = ret
+	return ret
+}
+
+func (c Coord) occupiedNeighbors(occupied map[Coord]bool) int {
+	count := 0
+	for _, n := range c.adjacent(occupied) {
+		if occupied[n] {
+			count++
+		}
+	}
+	return count
 }
 
 func main() {
-	dat, err := os.Open("test.txt")
+	dat, err := os.Open("input.txt")
 	if err != nil {
 		panic(err)
 	}
 	defer dat.Close()
 	scanner := bufio.NewScanner(dat)
-	var allSeats seats
-	allSeats = make(seats)
 	var line string
-	row := 0
+
+	occupied := make(map[Coord]bool)
+	var split []string
 	for scanner.Scan() {
 		line = scanner.Text()
-		allSeats.getSeats(line, row)
-		row++
+		split = append(split, line)
 	}
-	col := len(line)
 
-	neighborSeats := allSeats.getNeighbors(row, col)
-	allSeats.printSeats(row, col)
-	fmt.Printf("%+v\n", neighborSeats)
-	//fmt.Printf("%+v\n", allSeats.getNeighbors(3, 3))
+	for r, s := range split {
+		for c, v := range s {
+			switch v {
+			case 'L':
+				occupied[Coord{r, c}] = false
+			case '#':
+				occupied[Coord{r, c}] = true
+			case '.':
+				delete(occupied, Coord{r, c})
+			}
+		}
+	}
 
+	occupyThreshold := 4
+	if partB {
+		occupyThreshold = 5
+	}
+
+	for {
+		changed := false
+		prev := make(map[Coord]bool)
+		for k, v := range occupied {
+			prev[k] = v
+		}
+		for k, occ := range prev {
+			if occ {
+				if k.occupiedNeighbors(prev) >= occupyThreshold {
+					occupied[k] = false
+					changed = true
+				}
+			} else {
+				if k.occupiedNeighbors(prev) == 0 {
+					occupied[k] = true
+					changed = true
+				}
+			}
+		}
+		if !changed {
+			break
+		}
+	}
+
+	result := 0
+	for _, v := range occupied {
+		if v {
+			result++
+		}
+	}
+	fmt.Println(result)
 }
