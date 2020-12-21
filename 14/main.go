@@ -11,13 +11,12 @@ import (
 // Mask repr of binary mask
 type Mask [36]int
 
+// ResultMemory holds memory after Mask
+type ResultMemory map[int]int
+
 // Mem line from input
 type Mem struct {
 	addr  int
-	value int
-}
-
-type ResultMem sturct {
 	value int
 }
 
@@ -43,8 +42,9 @@ func parseMem(key string, value string) (mem Mem) {
 	return mem
 }
 
-func updateMemory(mask Mask, mem Mem) {
+func updateMemory(mask Mask, mem Mem) (result int) {
 	//strconv.Atoi(line)
+	return result
 }
 
 func main() {
@@ -56,7 +56,7 @@ func main() {
 	scanner := bufio.NewScanner(dat)
 	var mask Mask
 	var mem Mem
-	resultMemory = []Mem
+	resultMemory := make(ResultMemory)
 
 	var line string
 
@@ -70,5 +70,5 @@ func main() {
 		mem = parseMem(key, value)
 		resultMemory[mem.addr] = updateMemory(mask, mem)
 	}
-	fmt.Printf("Result1: %v", result)
+	fmt.Printf("Result1: %v", resultMemory)
 }
