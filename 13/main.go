@@ -28,7 +28,11 @@ func getNextBus(currentTime int, busIDs []int) (nextBus int, departure int) {
 		}
 		departure++
 	}
-	return nextBus, departure
+}
+
+func getFirstTimestampWalk(busIDs []int) (timestamp int) {
+
+	return timestamp
 }
 
 func main() {
@@ -43,8 +47,11 @@ func main() {
 	busIDs := getBusIDs(lines[1])
 	bus, departure := getNextBus(currentTime, busIDs)
 	timoToWait := departure - currentTime
+
+	firstTimestampWalk := getFirstTimestampWalk(busIDs)
 	//fmt.Printf("%+v\ntimestamp: %v\n", busIDs, currentTime)
 	//fmt.Printf("Next Bus: %+v\tDeparts at: %v\n", bus, departure)
 	fmt.Printf("Time to wait: %v\tNext Bus ID: %v\nResult: %v\n\n", timoToWait, bus, timoToWait*bus)
+	fmt.Printf("First Timestamp Walk: %v", firstTimestampWalk)
 
 }
