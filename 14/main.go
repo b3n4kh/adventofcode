@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -70,20 +71,37 @@ func updateMemory(mask Mask, memory Mask) (result Mask) {
 	return result
 }
 
-func (result ResultMemory) updateMemoryPart2(mask Mask, addr Mask) {
+func (result ResultMemory) updateMemoryPart2(mask Mask, addr Mask, value int) {
+
+	var floatingBits []int
+	var resultMask Mask
 
 	// fmt.Printf("mask: %+v\nmem:  %+v\n", mask, memToBits(mem))
 	for i, bit := range mask {
-		if bit == -1 {
-			//		result[i] = memory[i]
-			continue
+		switch bit {
+		case 0:
+			resultMask[i] = addr[i]
+		case 1:
+			resultMask[i] = 1
+		case -1:
+			floatingBits = append(floatingBits, i)
 		}
-		result[i] = bit
+	}
+	addressRange := int(math.Pow(2, float64(len(floatingBits))))
+	fmtString := "%0" + strconv.Itoa(len(floatingBits)) + "b"
+	for i := 0; i < addressRange; i++ {
+		fBits := fmt.Sprintf(fmtString, i)
+		//fmt.Printf("addrRange: %v, fBits: %+v\n", addressRange, fBits)
+		for bitpos, maskpos := range floatingBits {
+			b, _ := strconv.Atoi(string(fBits[bitpos]))
+			resultMask[maskpos] = b
+		}
+		result[bitToInt(resultMask)] = value
 	}
 
 }
 
-func parseResult(resultBits Mask) (result int) {
+func bitToInt(resultBits Mask) (result int) {
 	bits := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(resultBits)), ""), "[]")
 	parsed, _ := strconv.ParseInt(bits, 2, 64)
 	result = int(parsed)
@@ -118,12 +136,11 @@ func main() {
 		res = updateMemory(mask, memBits)
 
 		addrBits := stringToBits(fmt.Sprintf("%b", mem.addr))
-
-		result2Memory.updateMemoryPart2(mask, addrBits)
+		result2Memory.updateMemoryPart2(mask, addrBits, mem.value)
 
 		// result2Memory[mem.addr] = parseResult(res2)
 
-		resultMemory[mem.addr] = parseResult(res)
+		resultMemory[mem.addr] = bitToInt(res)
 	}
 	// fmt.Printf("resultMemory: %+v\n", resultMemory)
 	result := 0
