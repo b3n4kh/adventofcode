@@ -14,8 +14,14 @@ func main() {
 	defer dat.Close()
 	scanner := bufio.NewScanner(dat)
 	var line string
-	for scanner.Scan() {
-		line = scanner.Text()
-		fmt.Println(line)
+	scanner.Scan()
+	line = scanner.Text()
+	var numebr int
+	var history []int
+	for char := strings.Split(line, ",") {
+		number, _ = strconv.Atoi(char)
+		history = append(history, number)
 	}
+	fmt.Println(history)
+
 }
