@@ -1,4 +1,5 @@
 # --- Day 15: Rambunctious Recitation ---
+
 You catch the airport shuttle and try to book a new flight to your vacation island. Due to the storm, all direct flights have been cancelled, but a route is available to get around the storm. You take it.
 
 While you wait for your flight, you decide to check in with the Elves back at the North Pole. They're playing a memory game and are ever so excited to explain the rules!
@@ -35,3 +36,17 @@ Given the starting numbers `3,2,1`, the `2020`th number spoken is `438`.
 Given the starting numbers `3,1,2`, the `2020`th number spoken is `1836`.
 
 Given your starting numbers, **what will be the 2020th number spoken?**
+
+## --- Part Two ---
+
+Impressed, the Elves issue you a challenge: determine the 30000000th number spoken. For example, given the same starting numbers as above:
+
+- Given `0,3,6`, the `30000000`th number spoken is `175594`.
+- Given `1,3,2`, the `30000000`th number spoken is `2578`.
+- Given `2,1,3`, the `30000000`th number spoken is `3544142`.
+- Given `1,2,3`, the `30000000`th number spoken is `261214`.
+- Given `2,3,1`, the `30000000`th number spoken is `6895259`.
+- Given `3,2,1`, the `30000000`th number spoken is `18`.
+- Given `3,1,2`, the `30000000`th number spoken is `362`.
+
+Given your starting numbers, **what will be the 30000000th number spoken?**
