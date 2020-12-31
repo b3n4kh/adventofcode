@@ -6,8 +6,16 @@ import (
 	"os"
 )
 
+type rule struct {
+	name          string
+	lowerRangeMin int
+	lowerRangeMax int
+	upperRangeMin int
+	upperRangeMax int
+}
+
 func main() {
-	dat, err := os.Open("input.txt")
+	dat, err := os.Open("test.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -16,6 +24,9 @@ func main() {
 	var line string
 	for scanner.Scan() {
 		line = scanner.Text()
+		if line != "" {
+
+		}
 		fmt.Println(line)
 	}
 }
