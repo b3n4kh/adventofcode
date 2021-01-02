@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"strings"
+	"os"
 	"testing"
 )
-
 
 func Test_main(t *testing.T) {
 	dat, err := os.Open("test.txt")

@@ -1,8 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"strings"
+	"os"
 	"testing"
 )
 
