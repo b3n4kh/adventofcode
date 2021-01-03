@@ -32,20 +32,24 @@ func main() {
 	}
 	defer dat.Close()
 	scanner := bufio.NewScanner(dat)
+	nbt := false
 	var line string
 	var myTickets, nearbyTickets []int
 	for scanner.Scan() {
 		line = scanner.Text()
+
 		if line == "your ticket:" {
 			scanner.Scan()
 			myTickets = getTicket(scanner.Text())
+			fmt.Printf("my ticket: %+v\n", myTickets)
 		}
 		if line == "nearby tickets:" {
-			scanner.Scan()
-			nearbyTickets = getTicket(scanner.Text())
+			nbt = true
+			continue
 		}
-
-		fmt.Printf("my ticket: %+v\n", myTickets)
-		fmt.Printf("nearby ticket: %+v\n", nearbyTickets)
+		if nbt {
+			nearbyTickets = getTicket(line)
+			fmt.Printf("nearby ticket: %+v\n", nearbyTickets)
+		}
 	}
 }
