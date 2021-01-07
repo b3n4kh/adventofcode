@@ -8,6 +8,38 @@ import (
 	"strings"
 )
 
+// Operand interface
+type Operand interface {
+	doMath() int
+}
+
+// Operation interface
+type Operation struct {
+	Operands  []Operand
+	Operators []Operator
+}
+
+// Operator interface
+type Operator func(int, int) int
+
+func sum(x, y int) int {
+	return x + y
+}
+
+func product(x, y int) int {
+	return x * y
+}
+
+func (o Operation) doMath() (result int) {
+	for i := range o.Operands {
+		if o.Operators[i](1, 1) == 2 {
+
+		}
+	}
+
+	return result
+}
+
 func parseParanthesis(elements []string) (subElements map[int]string) {
 	var depth, lastDepth, subBlock, diff int
 	var numOrOp string
