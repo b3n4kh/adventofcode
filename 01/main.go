@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"strconv"
@@ -14,38 +15,42 @@ func check(e error) {
 	}
 }
 
-func find2020(data []int) (two int, three int) {
-	for first, firstNum := range data {
-		for second, secondNum := range data[first:] {
-			if (firstNum + secondNum) == 2020 {
-				two = firstNum * secondNum
-			}
-			for _, thirdNum := range data[first+second:] {
-				if (firstNum + secondNum + thirdNum) == 2020 {
-					three = firstNum * secondNum * thirdNum
-					// fmt.Printf("%v * %v * %v = %v\n", firstNum, secondNum, thirdNum, result)
-					return two, three
-				}
-			}
-		}
-	}
-	return two, three
-}
-
 func main() {
+	var debug bool
+	flag.BoolVar(&debug, "debug", false, "debug mode")
+	flag.Parse()
 
-	dat, err := ioutil.ReadFile("input.txt")
-	check(err)
-	var result []int
-	scanner := bufio.NewScanner(bytes.NewReader(dat))
-	for scanner.Scan() {
-		x, err := strconv.Atoi(scanner.Text())
-		check(err)
-		result = append(result, x)
+	inputfile := "input.txt"
+
+	if debug {
+		inputfile = "test.txt"
 	}
-	two, three := find2020(result)
 
-	fmt.Printf("Part One: %v\n", two)
-	fmt.Printf("Part Two: %v\n", three)
+	dat, err := ioutil.ReadFile(inputfile)
+	check(err)
+	scanner := bufio.NewScanner(bytes.NewReader(dat))
+	current_depth, last_depth, second_last_depth := 0, 0, 0
+	current_window, last_window := 0, 0
+	result_one, result_two := -1, -1
 
+	for scanner.Scan() {
+		current_depth, err = strconv.Atoi(scanner.Text())
+		check(err)
+		if current_depth > last_depth {
+			result_one++
+		}
+
+		if second_last_depth > 0 && last_depth > 0 {
+			current_window = current_depth + last_depth + second_last_depth
+			if current_window > last_window {
+				result_two++
+			}
+			last_window = current_window
+		}
+		second_last_depth = last_depth
+		last_depth = current_depth
+	}
+
+	fmt.Printf("Part One: %v\n", result_one)
+	fmt.Printf("Part Two: %v\n", result_two)
 }
